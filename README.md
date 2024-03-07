@@ -3,5 +3,5 @@ Static curl binaries for mathlib4 `lake exe cache`
 
 Generated using
 ```sh
-for sys in aarch64-linux x86_64-linux; do nix build github:NixOS/nixpkgs/8f40f2f90b9c9032d1b824442cfbbe0dbabd0dbd#pkgsStatic.curl --system $sys; cp result-bin/bin/curl curl-$sys-static; done
+for sys in aarch64-linux x86_64-linux; do nix build github:NixOS/nixpkgs/9df3e30ce24fd28c7b3e2de0d986769db5d6225d#pkgsStatic.curl --system $sys; cp result-bin/bin/curl curl-$sys-static; done
 ```
