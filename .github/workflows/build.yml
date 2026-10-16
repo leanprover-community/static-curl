@@ -1,0 +1,30 @@
+name: Build
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        runner: [ubuntu-24.04, ubuntu-24.04-arm]
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Build curl
+        run: |
+          docker run --rm -v "$PWD:/work" -w /work \
+            nixos/nix@sha256:ff480dbb23511aa1c10710aa068ceea5b93fed9bfce5f5379f3a6b07282cbc7b \
+            sh -ec 'nix-build -A bin; cp result-bin/bin/curl "curl-$(uname -m)-linux-static"'
+      - name: Check curl
+        run: |
+          ./curl-$(uname -m)-linux-static --version
+          ./curl-$(uname -m)-linux-static -fsSI https://github.com
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: curl-${{ matrix.runner }}
+          path: curl-*-linux-static
+          if-no-files-found: error
